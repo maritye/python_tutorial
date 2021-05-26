@@ -1,15 +1,33 @@
-# Read the data file
-filename = "data/wxobs20170821.txt"
-datafile = open(filename, 'r')
+# Column names and column indices to read 
+columns = {'date': 0, 'time': 1, 'tempout': 2}
 
-# Column names and column indices to read
-columns = {'date': 0, 'time': 1, 'tempout': 2, 'windspeed': 7}
 # Data types for each column (only if non-string)
-types = {'tempout': float, 'windspeed': float}
+types = {'tempout': float}
 
-print(datafile.readline())
-print(datafile.readline())
-print(datafile.readline())
-print(datafile.readline())
+# Initialize my data variable create an empty list to be filled with dictionary
+data = {}
+for column in columns:
+   data[column] = []
 
-datafile.close()
+# Read and parse the data file
+filename = "data/wxobs20170821.txt"
+with open(filename, 'r') as datafile:
+
+   # Read the first three lines (header)
+   # .readline() reads consecutive lines each time it is called.
+   for _ in range(3):
+      datafile.readline()
+
+   # Read and parse the rest of the file
+   for line in datafile:
+    # spplits the string at white space or othe named characters
+      split_line = line.split()
+      for column in columns:
+         i = columns[column]
+         t = types.get(column, str)
+         value = t(split_line[i])
+         data[column].append(value)
+
+# DEBUG
+print(data['tempout'])
+
